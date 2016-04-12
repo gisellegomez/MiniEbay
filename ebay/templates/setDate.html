@@ -1,0 +1,6 @@
+$def with (form, currTime)
+<h1>Set the current date and time (currently $currTime)</h1>
+<form name="setDate" action='/setDate'  method="post">
+$:form.render()
+<input type="submit"/>
+</form>

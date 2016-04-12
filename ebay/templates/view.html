@@ -1,0 +1,33 @@
+$def with (item)
+<table>
+    <tr>
+        <th>Item detail</th>
+        <th></th>
+    </tr>
+  <tr>
+  <td>id</td>
+  <td>category</td>
+  <td>title</td>
+  <td>price</td>
+  <td>open</td>
+  <td>end_date</td>
+  </tr>    
+  <tr>
+  <td>$item.id</td>
+  <td>$item.category</td>
+  <td>$item.title</td>
+  <td>$item.price</td>
+  <td>$item.open</td>
+  <td>$item.end_date</td>
+  </tr>    
+  <tr>    
+  <td><a href="/bids/$item.id">Bids</a></td>
+  <td><a href="/">Back</a></td>
+  $if item.open == 1:
+    <td><a href="/bid/$item.id">Bid</a></td>
+  $else:
+    $if item.winner:
+      <td>Winner: $item.winner</td>
+  </tr>    
+</table>  
+
