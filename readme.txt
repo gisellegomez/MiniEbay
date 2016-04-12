@@ -1,5 +1,5 @@
 CST324 Mini eBay project
-Team members: Random Davis
+Team members: Giselle Gomez, Audrey Ramborg, Kelly Keniston
 Framework: webpy with sqlite
 
 commands to run:
