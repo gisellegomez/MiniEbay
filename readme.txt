@@ -1,4 +1,4 @@
-CST324 Mini eBay project
+CST351 Mini eBay project
 Team members: Giselle Gomez, Audrey Ramborg, Kelly Keniston
 Framework: webpy with sqlite
 
