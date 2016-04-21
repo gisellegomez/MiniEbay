@@ -8,7 +8,7 @@ CREATE TABLE categories(
 	name varchar(20)
 );
 
-insert into categories values
+insert into categories ('name') values
 	('electronics'),
 	('toys'),
 	('books'),
