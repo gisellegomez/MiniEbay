@@ -15,17 +15,24 @@ def get_current_time():
 def get_items():
     return db.select('Items', order='id DESC')
 
-def get_select_items(category, title, description, price, open):
-    if price == '':
+def get_select_items(id, category, description, price, open):
+    if price == '' and id == '':
         return db.select('Items', order='id DESC', where='category like \'%' + 
             category + '%\' and description like \'%' + description + '%\'' + 
-            ' and title like \'%' + title + '%\''  + ' and open like \'%' + open +
-            '%\'')
+            ' and open like \'%' + open + '%\'')
+    elif price == '':
+        return db.select('Items', order='id DESC', where='category like \'%' + 
+            category + '%\' and description like \'%' + description + '%\'' + 
+            ' and open like \'%' + open + '%\'' + ' and id=' + id )
+    elif id == '':
+        return db.select('Items', order='id DESC', where='category like \'%' + 
+            category + '%\' and description like \'%' + description + '%\'' + 
+            ' and open like \'%' + open + '%\'' + ' and price ' + price )
     else:
         return db.select('Items', order='id DESC', where='category like \'%' + 
             category + '%\' and description like \'%' + description + '%\'' + 
-            ' and title like \'%' + title + '%\'' + ' and open like \'%' + open + 
-            '%\'' + ' and price ' + price )
+            ' and open like \'%' + open + '%\'' + ' and price ' + price + 
+            ' and id=' + id)
 
 def get_item(id):
     try:

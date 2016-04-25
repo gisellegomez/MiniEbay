@@ -8,10 +8,10 @@ from web import form
 render = web.template.render('templates/', base='base')
 
 urls = ('/', 'Index',
+        '/search', 'Search',
         '/view/(\d+)', 'View',
         '/bid', 'Bid',
         '/bid/(\d+)', 'Bid',
-        '/bids/(\d+)', 'Bids',
         '/new', 'New',
         '/setDate', 'setDate'
 )
@@ -64,16 +64,12 @@ class setDate:
             model.set_current_time(parsed_time)
         return render.setDate(self.form, str(model.get_current_time()))
 
-
 options = form.Form(
-    form.Textbox('id', '\d'),
-    form.Dropdown('category', ['']),
-    form.Textbox('title', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
-    form.Textbox('description', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
-    form.Textbox('price', form.regexp('[><]?[=]?\d*', 
-                'Must be <, >, <=, or >=, followed by digits'), value=">=0.0"),
-    form.Dropdown('open', ['', '1', '0']),
-    form.Button('Submit')
+    form.Textbox('ID', form.regexp('^[0-9]*$', 'Invalid text'), value=""),
+    form.Dropdown('Category', ['']),
+    form.Textbox('Description', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
+    form.Textbox('Price', form.regexp('[><]?[=]?\d*', 'Must be <, >, <=, or >=, followed by digits'), value=">=0.0"),
+    form.Dropdown('Open', ['', '1', '0'])
 )
 
 class Index: 
@@ -82,76 +78,69 @@ class Index:
         db = web.database(dbn='sqlite', db='../sqlite.db')
         categories = db.select('Categories', what='name').list()
         for category in categories:
-            columns.category.args = columns.category.args + [category.name]
+            columns.Category.args = columns.Category.args + [category.name]
         items = model.get_items()
-        return render.index(columns, items, categories)
+        return render.index(columns, items)
 
     def POST(self):
         columns = options() 
         db = web.database(dbn='sqlite', db='../sqlite.db')
-        categories = db.select('Categories', what='name').list()
+        categories = db.select('categories', what='name').list()
         for category in categories:
-            columns.category.args = columns.category.args + [category.name]
+            columns.Category.args = columns.Category.args + [category.name]
         if not columns.validates():
             print columns.render_css()
             raise web.seeother('/')
         else:
-            items = model.get_select_items(columns.d.category, columns.d.title, 
-                    columns.d.description, columns.d.price, columns.d.open)
+            items = model.get_select_items(columns.d.ID, columns.d.Category, 
+                    columns.d.Description, columns.d.Price, columns.d.Open)
             return render.index(columns, items)
 
 bidForm = form.Form( 
-       form.Dropdown('buyer', ['']),
-       form.Textbox('price', form.notnull, form.regexp('\d+', 'Must be a digit')),
-       validators=[form.Validator("Price too low", lambda i: float(i.price) > 0)]
+       form.Dropdown('User', ['']),
+       form.Textbox('Price', form.notnull, form.regexp('\d+', 'Must be a digit')),
+       validators=[form.Validator("Price too low", lambda i: float(i.Price) > 0)]
 )
 class Bid:
     def __init__(self):
         self.bid = bidForm()
         db = web.database(dbn='sqlite', db='../sqlite.db')
         users = db.select('Users', what='user_id').list()
-        self.bid.buyer.args = []
+        self.bid.User.args = []
         for user in users:
-            self.bid.buyer.args = self.bid.buyer.args + [user.userId]
+            self.bid.User.args = self.bid.User.args + [user.user_id]
 
     def GET(self, item_id=None):
         if item_id is None:
             raise web.seeother('/')
         self.bid.d.itemID = item_id
         item = model.get_item(int(item_id))
+        bids = model.get_bids(int(item_id))
         if item is None:
             raise web.seeother('/')
         web.setcookie('item_id', item.id)
-        return render.bid(item, self.bid)
+        return render.bid(item, bids, self.bid)
 
     def POST(self):
         item_id = web.cookies().get('item_id')
         item = model.get_item(int(item_id))
+        bids = model.get_bids(int(item_id))
         if item.open == 0:
             raise web.seeother('/view/' + item_id)
         highest_bid = model.get_highest_bid(item_id)
         buy_price = item.price
         if highest_bid is not None:
             self.bid.validators.append(
-                form.Validator("Price must be higher than highest bid (" + 
-                               str(highest_bid.price) + " by " +
-                               highest_bid.buyer + ")", 
-                               lambda i: float(i.price) > highest_bid.price))
+                form.Validator("Price must be higher than highest bid (" + str(highest_bid.Price) + " by " +
+                               highest_bid.User + ")", lambda i: float(i.Price) > highest_bid.Price))
         self.bid.validators.append(
             form.Validator("Price higher than item's buy price (" + str(buy_price) +
                            ")", lambda i: float(i.price) <= buy_price))
         if not self.bid.validates():
-            return render.bid(item, self.bid)
+            return render.bid(item, bids, self.bid)
         else:
-            model.new_bid(item_id, self.bid.d.buyer, self.bid.d.price)
+            model.new_bid(item_id, self.bid.d.User, self.bid.d.Price)
             raise web.seeother('/view/' + item_id)
-
-class Bids: 
-    def GET(self, id):
-        bids = model.get_bids(int(id))
-        if bids is None:
-            raise web.seeother('/')
-        return render.bids(id, bids)
 
 newForm = form.Form( 
     form.Dropdown('category', []),

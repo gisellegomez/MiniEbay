@@ -1,8 +1,65 @@
-$def with (item, form)
+$def with (item, bids, form)
+<h3>Information on $item.title</h3>
 
-<h3>place a bid on $item.title</h3><br>
+<table data-role="table" class="ui-responsive ui-shadow">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Category</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>End Date</th>
+    </tr>    
+    </thead>
+    <tbody>
+    <tr>
+        <td>$item.id</td>
+        <td>$item.category</td>
+        <td>$item.title</td>
+        <td>$item.description</td>
+        <td>$item.price</td>
+        $if item.open == 1:
+          <td>Open</td>
+        $else:
+          <td>Closed</td>
+        <td>$item.end_date</td>
+    </tr>     
+    </tbody>
+</table>  
 
-<form name="bid" action='/bid'  method="post">
-    $:form.render()
-    <input type="submit"/>
-</form>
+<br>
+<h3>Bids</h3>
+
+<table data-role="table" class="ui-responsive ui-shadow">
+    <thead>
+    <tr>
+        <th>Buyer</th>
+        <th>Price</th>
+        <th>Time</th>
+    </tr>    
+    </thead>
+    <tbody>
+    $for bid in bids:
+      <tr>
+        <td>$bid.buyer</td>
+        <td>$bid.price</td>
+        <td>$bid.b_time</td>
+      </tr>   
+    </tbody> 
+</table>  
+
+<br>
+$if item.open == 1:
+    <h3>Place Bid</h3>
+
+    <!--<form name="bid" action="/bid/$item.id"  method="post">-->
+    <form name="bid" action='/bid'  method="post">
+        $:form.render()
+        <input type="submit" data-inline="true" value="Submit">
+    </form>
+$else:
+    $if item.winner:
+        <h3>Winner: $item.winner</h3>
+

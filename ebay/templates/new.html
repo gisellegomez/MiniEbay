@@ -1,9 +1,8 @@
 $def with (form)
 
-
 <h3>Create New Listing</h3>
 
 <form name="new" action="/new"  method="post">
     $:form.render()
-    <input type="submit"/>
+    <input type="submit" data-inline="true" value="Submit">
 </form>
