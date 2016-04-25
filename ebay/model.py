@@ -47,7 +47,7 @@ def new_item(category, title, description, price):
 
 def new_bid(id, buyer, price):
     db.insert('Bids', id=id, buyer=buyer, price=price, 
-        bid_time=get_current_time().strftime(time_format))
+        b_time=get_current_time().strftime(time_format))
 
 def get_bids(id):
     if get_item(id) is None:

@@ -14,14 +14,13 @@ $def with (form, items)
         <th>Price</th>
         <th>Status</th>
         <th>End Date</th>
-        <th>Current Bids</th>
-        <th>             </th>
+        <th>Detailed View & Bids</th>
     </tr>    
     </thead>
     <tbody>
     $for item in items:
       <tr>
-        <td><a href="/view/$item.id">$item.id</a></td>
+        <td>$item.id</td>
         <td>$item.category</td>
         <td>$item.title</td>
         <td>$item.description</td>
