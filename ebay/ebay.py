@@ -8,8 +8,6 @@ from web import form
 render = web.template.render('templates/', base='base')
 
 urls = ('/', 'Index',
-        '/search', 'Search',
-        '/view/(\d+)', 'View',
         '/bid', 'Bid',
         '/bid/(\d+)', 'Bid',
         '/new', 'New',
