@@ -15,12 +15,13 @@ $def with (form, items)
         <th>Status</th>
         <th>End Date</th>
         <th>Current Bids</th>
+        <th>             </th>
     </tr>    
     </thead>
     <tbody>
     $for item in items:
       <tr>
-        <td>$item.id</td>
+        <td><a href="/view/$item.id">$item.id</a></td>
         <td>$item.category</td>
         <td>$item.title</td>
         <td>$item.description</td>
@@ -43,3 +44,4 @@ $def with (form, items)
     </div>
     <input type="submit" data-inline="true" value="Submit">
 </form>
+

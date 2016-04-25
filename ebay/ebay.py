@@ -94,11 +94,23 @@ class Index:
                     columns.d.Description, columns.d.Price, columns.d.Open)
             return render.index(columns, items)
 
+# class View: 
+#     def GET(self, item_id=None):
+#         if item_id is None:
+#             raise web.seeother('/')
+#         columns = options()
+#         item = model.get_item(int(item_id))
+#         if item is None:
+#             raise web.seeother('/')
+#         columns.category.args = item.category
+#         return render.view(columns, item)            
+
 bidForm = form.Form( 
        form.Dropdown('User', ['']),
        form.Textbox('Price', form.notnull, form.regexp('\d+', 'Must be a digit')),
        validators=[form.Validator("Price too low", lambda i: float(i.Price) > 0)]
 )
+
 class Bid:
     def __init__(self):
         self.bid = bidForm()
