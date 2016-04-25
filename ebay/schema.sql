@@ -63,13 +63,13 @@ INSERT INTO Items(title, category, description, open, price, end_date, winner) V
 
 DROP TABLE IF EXISTS Bids;
 CREATE TABLE Bids(
-    id int NOT NULL,
-	buyer varchar(50) NOT NULL, 
-	price float NOT NULL,
-	b_time datetime NOT NULL,
-	b_id integer primary key autoincrement
+    b_id integer primary key autoincrement,
+    items_id int NOT NULL,
+	item_buyer varchar(50) NOT NULL, 
+	new_price float NOT NULL,
+	b_time datetime NOT NULL
 );
-INSERT INTO Bids (id, buyer, price, b_time) VALUES
+INSERT INTO Bids (items_id, item_buyer, new_price, b_time) VALUES
 	(1, 'KellyK38', 20, '2016-03-13 15:22:02'),
     (2, 'KellyK38', 15, '2016-03-20 16:35:42'),
 	(2, 'Ramborg', 20, '2016-03-20 19:15:02'),
@@ -82,14 +82,14 @@ CREATE TRIGGER TimeUpdateTrigger
 AFTER UPDATE OF current_time ON Time
 	BEGIN
 		UPDATE Items SET open = 0 WHERE end_date <= new.current_time;
-		UPDATE Items SET winner = (SELECT buyer from Bids WHERE Bids.id = Items.id ORDER BY Bids.price DESC LIMIT 1) WHERE open = 0 AND winner IS NULL;
+		UPDATE Items SET winner = (SELECT item_buyer from Bids WHERE Bids.items_id = Items.id ORDER BY Bids.new_price DESC LIMIT 1) WHERE open = 0 AND winner IS NULL;
 	END;
 
 DROP TRIGGER IF EXISTS BidUpdateTrigger;
 CREATE TRIGGER BidUpdateTrigger
 AFTER INSERT ON Bids
     BEGIN
-        UPDATE Items SET winner = (SELECT buyer from Bids WHERE Bids.id = Items.id AND Bids.price >= Items.price LIMIT 1) WHERE open = 1;
+        UPDATE Items SET winner = (SELECT item_buyer from Bids WHERE Bids.items_id = Items.id AND Bids.new_price >= Items.price LIMIT 1) WHERE open = 1;
     END;
 
 DROP TRIGGER IF EXISTS ItemsUpdateTrigger;

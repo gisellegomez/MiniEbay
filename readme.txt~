@@ -5,7 +5,7 @@ Framework: webpy with sqlite
 commands to run:
 
 sqlite3 sqlite.db
-.read ebay/schema.sql
+.read sqlite.db ebay/schema.sql
 
 cd ebay
 python ebay.py
