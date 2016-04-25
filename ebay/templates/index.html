@@ -1,46 +1,64 @@
-$def with (form, items)
-<form action="" method="post">
-$:form.render()
-<input type="submit"/>
-</form>
+$def with (form, items, categories)
 
- <style>
- 		.ourTable {
- 			width: 900px;
- 			position: fixed;
- 		}
- 		
-        table {
-/*         	position: absolute; */
-            border: 2px solid black;
-            margin: 100px;
-        }
-</style>
-<div id="ourTable">
-<table>
+<h3>Current Items</h3>
+
+<table data-role="table" class="ui-responsive ui-shadow" id="myTable">
+    <thead>
     <tr>
-        <th>Items</th>
-        <th></th>
-    </tr>
-  <tr>
-  <td>id</td>
-  <td>category</td>
-  <td>title</td>
-  <td>description</td>
-  <td>price</td>
-  <td>open</td>
-  <td>end_date</td>
-  </tr>    
-$for item in items:
-  <tr>
-  <td>$item.id</td>
-  <td>$item.category</td>
-  <td>$item.title</td>
-  <td>$item.description</td>
-  <td>$item.price</td>
-  <td>$item.open</td>
-  <td>$item.end_date</td>
-  <td><a href="/view/$item.id">View</a></td>
-  </tr>    
+        <th>ID number</th>
+        <th>Category</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>End Date</th>
+        <th>Current Bids</th>
+    </tr>    
+    </thead>
+    <tbody>
+    $for item in items:
+      <tr>
+        <td>$item.id</td>
+        <td>$item.category</td>
+        <td>$item.title</td>
+        <td>$item.description</td>
+        <td>$item.price</td>
+        $if item.open == 1:
+          <td>Open</td>
+        $else:
+          <td>Closed</td>
+        <td>$item.end_date</td>
+        <td><a href="/bids/$item.id">View</a></td>
+      </tr>    
+    </tbody>
 </table>  
-</div>
+<br>
+<hr style="border-top: 1px solid #d6d6d6;">
+
+<h3>Search Items</h3>
+
+<form action="" method="post">
+    <div class="ui-field-contain">
+        <label for="idnum">ID Number</label>
+        <input type="text" name="idnum" id="idnum">
+        <label for="category">Category</label>
+        <select name="category" id="category">
+            <option value="any" selected>Any</option>
+          $for category in categories:
+            <option value=$category>$category.name</option>
+        </select>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title">
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description">
+        <label for="price">Price</label>
+        <input type="text" name="price" id="price" placeholder=">=0">
+        <label for="status">Status</label>
+        <select name="status" id="status">
+            <option value="any" selected>Any</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+        </select>
+    </div>
+    <input type="submit" data-inline="true" value="Submit">
+</form>

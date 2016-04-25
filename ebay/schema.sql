@@ -1,37 +1,29 @@
-drop table IF EXISTS Time;
+DROP TABLE IF EXISTS Time;
 CREATE TABLE Time(current_time datetime DEFAULT CURRENT_TIMESTAMP);
-insert into Time DEFAULT VALUES;
+INSERT INTO Time DEFAULT VALUES;
 
-drop table IF EXISTS categories;
-
-CREATE TABLE categories(
+DROP TABLE IF EXISTS Categories;
+CREATE TABLE Categories(
 	name varchar(20)
 );
+INSERT INTO Categories ('name') VALUES
+	('Movies'),
+	('Clothes'),
+	('Books'),
+	('Tools'),
+	('Other');
 
-insert into categories ('name') values
-	('electronics'),
-	('toys'),
-	('books'),
-	('auto'),
-	('computers'),
-	('misc')
-	;
-
-drop table IF EXISTS Users;
-
-Create table Users(
-	userId varchar(16) primary key
+DROP TABLE IF EXISTS Users;
+CREATE TABLE Users(
+	user_id varchar(16) primary key
 );
+INSERT INTO Users VALUES
+	('KellyK38'),
+	('Ramborg'),
+	('GGomez');
 
-insert into Users values
-	('JohnSmith10'),
-	('JamesRandy28'),
-	('SaveFerris123'),
-	('R2Bl3nd')
-	;
-
-drop table IF EXISTS items;
-CREATE TABLE items(
+DROP TABLE IF EXISTS Items;
+CREATE TABLE Items(
 	id integer primary key autoincrement,
 	title char(50), 
 	category char(50) NOT NULL, 
@@ -41,52 +33,30 @@ CREATE TABLE items(
 	end_date datetime,
 	winner varchar(50)
 );
-
-insert into Items(title, category, description, open, price, end_date, winner) values
-	(
-		'Dell laptop computer',
-		'computers',
-		'Dell laptop computer, 2ghz processor, 1gb memory, 40gb hard drive, 15-inch screen',
-		0,
-		400,
-		'2015-12-25 12:00:00.000000',
-		'SaveFerris123'
-	),
-	(
-		'Samsung DVD player',
-		'electronics',
-		'Samsung DVD player featuring SD card slot, support for playback MP3s and displaying of JPEG images; remote included',
-		1,
-		100,
-		'2015-12-24 14:00:00.000000',
-		NULL
-	),
-	(
-		'2016 Ferrari',
-		'auto',
-		'A fast, red sports car with less than 10,000 miles',
-		1,
-		90000,
-		'2015-12-01 16:00:00.000000',
-		NULL
-	)
+INSERT INTO Items(title, category, description, open, price, end_date, winner) VALUES
+    ('Shrek', 'movies', 'The best movie of all time.',
+     1, 15, '2016-05-06 12:00:00', NULL),
+    ('JJBA T-Shirt', 'clothes', 'Yare yare daze.',
+     0, 30, '2016-03-24 07:00:00', 'Ramborg'),
+    ('Wrench', 'tools', 'A very useful tool.',
+     1, 8, '2016-05-16 03:00:00', NULL)
 ;
 
-drop table IF EXISTS Bids;
-
-Create table Bids(
-	id int NOT NULL,
+DROP TABLE IF EXISTS Bids;
+CREATE TABLE Bids(
+    id int NOT NULL,
 	buyer varchar(50) NOT NULL, 
 	price float NOT NULL,
-	bid_time datetime NOT NULL,
-	bid_id integer primary key autoincrement
+	b_time datetime NOT NULL,
+	b_id integer primary key autoincrement
 );
-
-insert into Bids (id, buyer, price, bid_time) values
-	(1, 'JohnSmith10', 200, '2015-12-03 14:00:02'),
-	(1, 'SaveFerris123',  400, '2015-12-04 14:00:03'),
-	(2, 'R2Bl3nd',  50,  '2015-12-02 14:00:01')
-	;
+INSERT INTO Bids (id, buyer, price, b_time) VALUES
+	(1, 'KellyK38', 20, '2016-03-13 15:22:02'),
+    (2, 'KellyK38', 15, '2016-03-20 16:35:42'),
+	(2, 'Ramborg', 20, '2016-03-20 19:15:02'),
+    (2, 'KellyK38', 25, '2016-03-23 07:12:33'),
+    (2, 'Ramborg', 30, '2016-03-24 06:59:36'),
+	(3, 'GGomez', 11,  '2016-04-22 14:00:01');
 
 DROP TRIGGER IF EXISTS TimeUpdateTrigger;
 CREATE TRIGGER TimeUpdateTrigger
