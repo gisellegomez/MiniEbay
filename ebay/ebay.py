@@ -19,20 +19,26 @@ session = web.session.Session(app, web.session.DiskStore('sessions'),
 
 setDateForm = form.Form(
     form.Textbox('year', form.regexp('\d+', 'Must be a digit')),
-    form.Textbox('month', form.regexp('\d+', 'Must be a digit')),
-    form.Textbox('day', form.regexp('\d+', 'Must be a digit')),
-    form.Textbox('hour', form.regexp('\d+', 'Must be a digit')),
-    form.Textbox('minute', form.regexp('\d+', 'Must be a digit')),
-    form.Textbox('second', form.regexp('\d+', 'Must be a digit')),
-    validators=[
-        form.Validator('year out of range', lambda i: int(i.year) 
-                in range(datetime.MINYEAR, datetime.MAXYEAR)),
-        form.Validator('month out of range', lambda i: int(i.month) in range(1, 13)),
-        form.Validator("day out of range", lambda i: int(i.day) in range(1, 32)), ##in range(monthrange(int(i.year), int(i.month))[1] + 1)
-        form.Validator('hour out of range', lambda i: int(i.hour) in range(24)),
-        form.Validator('minute out of range', lambda i: int(i.minute) in range(60)),
-        form.Validator('second out of range', lambda i: int(i.second) in range(60)),
-    ]
+    form.Dropdown('month', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
+            '11', '12']),
+    form.Dropdown('day', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', 
+            '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']),
+    form.Dropdown('hour', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', 
+            '22', '23']),
+    form.Dropdown('minute', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', 
+            '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32',
+            '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43'
+            '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54',
+            '55', '56', '57', '58', '59']),
+    form.Dropdown('second', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', 
+            '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32',
+            '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43'
+            '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54',
+            '55', '56', '57', '58', '59']),
     )
 
 class setDate:
