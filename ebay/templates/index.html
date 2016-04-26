@@ -13,12 +13,13 @@ $def with (form, items, categories)
         <th>Status</th>
         <th>End Date</th>
         <th>Current Bids</th>
+        <th>             </th>
     </tr>    
     </thead>
     <tbody>
     $for item in items:
       <tr>
-        <td>$item.id</td>
+        <td><a href="/view/$item.id">$item.id</a></td>
         <td>$item.category</td>
         <td>$item.title</td>
         <td>$item.description</td>
@@ -29,6 +30,7 @@ $def with (form, items, categories)
           <td>Closed</td>
         <td>$item.end_date</td>
         <td><a href="/bids/$item.id">View</a></td>
+        <td><a href="/bid/$item.id">Bid</a></td>
       </tr>    
     </tbody>
 </table>  

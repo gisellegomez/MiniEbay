@@ -100,11 +100,23 @@ class Index:
                     columns.d.description, columns.d.price, columns.d.open)
             return render.index(columns, items)
 
+# class View: 
+#     def GET(self, item_id=None):
+#         if item_id is None:
+#             raise web.seeother('/')
+#         columns = options()
+#         item = model.get_item(int(item_id))
+#         if item is None:
+#             raise web.seeother('/')
+#         columns.category.args = item.category
+#         return render.view(columns, item)            
+
 bidForm = form.Form( 
        form.Dropdown('buyer', ['']),
        form.Textbox('price', form.notnull, form.regexp('\d+', 'Must be a digit')),
        validators=[form.Validator("Price too low", lambda i: float(i.price) > 0)]
 )
+
 class Bid:
     def __init__(self):
         self.bid = bidForm()
@@ -112,7 +124,7 @@ class Bid:
         users = db.select('Users', what='user_id').list()
         self.bid.buyer.args = []
         for user in users:
-            self.bid.buyer.args = self.bid.buyer.args + [user.userId]
+            self.bid.buyer.args = self.bid.buyer.args + [user.user_id]
 
     def GET(self, item_id=None):
         if item_id is None:
