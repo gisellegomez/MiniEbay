@@ -1,20 +1,20 @@
 $def with (id, bids)
-<table>
-    <tr>
-        <th>Item $id bids</th>
-        <th></th>
-    </tr>
-  <tr><a href="/view/$id">Back</a></tr>
-  <tr>
-  <td>buyer</td>
-  <td>price</td>
-  <td>time</td>
-  </tr>    
-$for bid in bids:
-  <tr>
-  <td>$bid.buyer</td>
-  <td>$bid.price</td>
-  <td>$bid.bid_time</td>
-  </tr>    
-</table>  
+<h3>Item $id bids</h3><br>
 
+<table data-role="table" class="ui-responsive ui-shadow">
+    <thead>
+    <tr>
+        <th>Buyer</th>
+        <th>Price</th>
+        <th>Time</th>
+    </tr>    
+    </thead>
+    <tbody>
+    $for bid in bids:
+      <tr>
+        <td>$bid.buyer</td>
+        <td>$bid.price</td>
+        <td>$bid.b_time</td>
+      </tr>   
+    </tbody> 
+</table>  

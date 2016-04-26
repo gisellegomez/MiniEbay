@@ -1,6 +1,8 @@
 $def with (item, form)
-<h1>place a bid on $item.title</h1>
+
+<h3>place a bid on $item.title</h3><br>
+
 <form name="bid" action='/bid'  method="post">
-$:form.render()
-<input type="submit"/>
+    $:form.render()
+    <input type="submit"/>
 </form>

@@ -16,24 +16,26 @@ urls = ('/', 'Index',
         '/setDate', 'setDate'
 )
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'id': ''})
+session = web.session.Session(app, web.session.DiskStore('sessions'), 
+        initializer={'id': ''})
 
 setDateForm = form.Form(
-            form.Textbox('year', form.regexp('\d+', 'Must be a digit')),
-            form.Textbox('month', form.regexp('\d+', 'Must be a digit')),
-            form.Textbox('day', form.regexp('\d+', 'Must be a digit')),
-            form.Textbox('hour', form.regexp('\d+', 'Must be a digit')),
-            form.Textbox('minute', form.regexp('\d+', 'Must be a digit')),
-            form.Textbox('second', form.regexp('\d+', 'Must be a digit')),
-            validators=[
-                form.Validator('year out of range', lambda i: int(i.year) in range(datetime.MINYEAR, datetime.MAXYEAR)),
-                form.Validator('month out of range', lambda i: int(i.month) in range(1, 13)),
-                form.Validator("day out of range", lambda i: int(i.day) in range(1, 32)), ##in range(monthrange(int(i.year), int(i.month))[1] + 1)
-                form.Validator('hour out of range', lambda i: int(i.hour) in range(24)),
-                form.Validator('minute out of range', lambda i: int(i.minute) in range(60)),
-                form.Validator('second out of range', lambda i: int(i.second) in range(60)),
-            ]
-        )
+    form.Textbox('year', form.regexp('\d+', 'Must be a digit')),
+    form.Textbox('month', form.regexp('\d+', 'Must be a digit')),
+    form.Textbox('day', form.regexp('\d+', 'Must be a digit')),
+    form.Textbox('hour', form.regexp('\d+', 'Must be a digit')),
+    form.Textbox('minute', form.regexp('\d+', 'Must be a digit')),
+    form.Textbox('second', form.regexp('\d+', 'Must be a digit')),
+    validators=[
+        form.Validator('year out of range', lambda i: int(i.year) 
+                in range(datetime.MINYEAR, datetime.MAXYEAR)),
+        form.Validator('month out of range', lambda i: int(i.month) in range(1, 13)),
+        form.Validator("day out of range", lambda i: int(i.day) in range(1, 32)), ##in range(monthrange(int(i.year), int(i.month))[1] + 1)
+        form.Validator('hour out of range', lambda i: int(i.hour) in range(24)),
+        form.Validator('minute out of range', lambda i: int(i.minute) in range(60)),
+        form.Validator('second out of range', lambda i: int(i.second) in range(60)),
+    ]
+    )
 
 class setDate:
     def __init__(self):
@@ -54,54 +56,49 @@ class setDate:
             return render.setDate(self.form, str(model.get_current_time()))
         else:
             parsed_time = datetime.datetime(
-                int(self.form.year.value), int(self.form.month.value), int(self.form.day.value),
-                int(self.form.hour.value), int(self.form.minute.value), int(self.form.second.value)
+                int(self.form.year.value), int(self.form.month.value), 
+                        int(self.form.day.value),
+                int(self.form.hour.value), int(self.form.minute.value), 
+                        int(self.form.second.value)
             )
             model.set_current_time(parsed_time)
         return render.setDate(self.form, str(model.get_current_time()))
 
 
 options = form.Form(
+    form.Textbox('id', '\d'),
     form.Dropdown('category', ['']),
     form.Textbox('title', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
-    form.Textbox('seller', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
     form.Textbox('description', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
-    form.Textbox('price', form.regexp('[><]?[=]?\d*', 'Must be <, >, <=, or >=, followed by digits'), value=">=0.0"),
-    form.Textbox('startTime', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
-    form.Textbox('endTime', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
-    form.Dropdown('open', ['', '1', '0'])
+    form.Textbox('price', form.regexp('[><]?[=]?\d*', 
+                'Must be <, >, <=, or >=, followed by digits'), value=">=0.0"),
+    form.Dropdown('open', ['', '1', '0']),
+    form.Button('Submit')
 )
 
 class Index: 
     def GET(self):
         columns = options()
         db = web.database(dbn='sqlite', db='../sqlite.db')
-        categories = db.select('categories', what='name').list()
+        categories = db.select('Categories', what='name').list()
         for category in categories:
             columns.category.args = columns.category.args + [category.name]
         items = model.get_items()
-        return render.index(columns, items)
+        return render.index(columns, items, categories)
 
     def POST(self):
         columns = options() 
         db = web.database(dbn='sqlite', db='../sqlite.db')
-        categories = db.select('categories', what='name').list()
+        categories = db.select('Categories', what='name').list()
         for category in categories:
             columns.category.args = columns.category.args + [category.name]
         if not columns.validates():
             print columns.render_css()
             raise web.seeother('/')
         else:
-            items = model.get_select_items(columns.d.category, columns.d.title, columns.d.description, columns.d.price, columns.d.open)
+            items = model.get_select_items(columns.d.category, columns.d.title, 
+                    columns.d.description, columns.d.price, columns.d.open)
             return render.index(columns, items)
-
-class View: 
-    def GET(self, id):
-        item = model.get_item(int(id))
-        if item is not None:
-            return render.view(item)
-        else:
-            raise web.seeother('/')
 
 bidForm = form.Form( 
        form.Dropdown('buyer', ['']),
@@ -112,7 +109,7 @@ class Bid:
     def __init__(self):
         self.bid = bidForm()
         db = web.database(dbn='sqlite', db='../sqlite.db')
-        users = db.select('users', what='userId').list()
+        users = db.select('Users', what='user_id').list()
         self.bid.buyer.args = []
         for user in users:
             self.bid.buyer.args = self.bid.buyer.args + [user.userId]
@@ -136,8 +133,10 @@ class Bid:
         buy_price = item.price
         if highest_bid is not None:
             self.bid.validators.append(
-                form.Validator("Price must be higher than highest bid (" + str(highest_bid.price) + " by " +
-                               highest_bid.buyer + ")", lambda i: float(i.price) > highest_bid.price))
+                form.Validator("Price must be higher than highest bid (" + 
+                               str(highest_bid.price) + " by " +
+                               highest_bid.buyer + ")", 
+                               lambda i: float(i.price) > highest_bid.price))
         self.bid.validators.append(
             form.Validator("Price higher than item's buy price (" + str(buy_price) +
                            ")", lambda i: float(i.price) <= buy_price))
@@ -165,7 +164,7 @@ class New:
     def GET(self):
         form= newForm()
         db = web.database(dbn='sqlite', db='../sqlite.db')
-        categories = db.select('categories', what='name').list()
+        categories = db.select('Categories', what='name').list()
         form.category.args=[]
         for category in categories:
             form.category.args = form.category.args + [category.name]
@@ -174,14 +173,15 @@ class New:
     def POST(self):
         db = web.database(dbn='sqlite', db='../sqlite.db')
         form= newForm()
-        categories = db.select('categories', what='name').list()
+        categories = db.select('Categories', what='name').list()
         form.category.args=['']
         for category in categories:
             form.category.args = form.category.args + [category.name]
         if not form.validates():
             return render.new(form)
         else:
-            model.new_item(form['category'].value, form['title'].value, form['description'].value, form['price'].value) 
+            model.new_item(form['category'].value, form['title'].value, 
+                form['description'].value, form['price'].value) 
         raise web.seeother('/')
 
 if __name__=="__main__":
