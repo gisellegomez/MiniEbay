@@ -67,7 +67,7 @@ options = form.Form(
     form.Dropdown('Category', ['']),
     form.Textbox('Description', form.regexp('[^\'^\"]*', 'Invalid text'), value=""),
     form.Textbox('Price', form.regexp('[><]?[=]?\d*', 'Must be <, >, <=, or >=, followed by digits'), value=">=0.0"),
-    form.Dropdown('Open', ['', '1', '0'])
+    form.Dropdown('Open', ['', 'Open', 'Closed'])
 )
 
 class Index: 
@@ -90,6 +90,7 @@ class Index:
             print columns.render_css()
             raise web.seeother('/')
         else:
+            print columns.d.Open
             items = model.get_select_items(columns.d.ID, columns.d.Category, 
                     columns.d.Description, columns.d.Price, columns.d.Open)
             return render.index(columns, items)        
@@ -120,25 +121,32 @@ class Bid:
         web.setcookie('item_id', item.id)
         return render.bid(item, bids, self.bid)
 
+    def BYNOW(self):
+        item_id = web.cookies().get('item_id')
+        item = model.get_item(int(item_id))
+        buy_price = item.price
+        model.new_bid((int(item_id)), self.bid['User'].value, buy_price)
+        raise web.seeother('/bid/' + item_id)
+
     def POST(self):
         item_id = web.cookies().get('item_id')
         item = model.get_item(int(item_id))
         bids = model.get_bids(int(item_id))
         if item.open == 0:
             raise web.seeother('/bid/' + item_id)
-        highest_bid = model.get_highest_bid(item_id)
+        highest_bid = model.get_highest_bid((int(item_id)))
         buy_price = item.price
         if highest_bid is not None:
             self.bid.validators.append(
-                form.Validator("Price must be higher than highest bid (" + str(highest_bid.price) + " by " +
-                               highest_bid.buyer + ")", lambda i: float(i.Price) > highest_bid.price))
+                form.Validator("Price must be higher than highest bid (" + str(highest_bid.new_price) + " by " +
+                               highest_bid.item_buyer + ")", lambda i: float(i.Price) > highest_bid.new_price))
         self.bid.validators.append(
             form.Validator("Price higher than item's buy price (" + str(buy_price) +
-                           ")", lambda i: float(i.Price) <= buy_price))
+                           ")", lambda i: float(i.Price) >= buy_price))
         if not self.bid.validates():
             return render.bid(item, bids, self.bid)
         else:
-            model.new_bid(item_id, self.bid.d.User, self.bid.d.Price)
+            model.new_bid((int(item_id)), self.bid['User'].value, self.bid['Price'].value)    
             raise web.seeother('/bid/' + item_id)
 
 newForm = form.Form( 
