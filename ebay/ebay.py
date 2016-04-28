@@ -140,9 +140,9 @@ class Bid:
             self.bid.validators.append(
                 form.Validator("Price must be higher than highest bid (" + str(highest_bid.new_price) + " by " +
                                highest_bid.item_buyer + ")", lambda i: float(i.Price) > highest_bid.new_price))
-        self.bid.validators.append(
-            form.Validator("Price higher than item's buy price (" + str(buy_price) +
-                           ")", lambda i: float(i.Price) >= buy_price))
+        # self.bid.validators.append(
+            # form.Validator("Price higher than item's buy price (" + str(buy_price) +
+            #                ")", lambda i: float(i.Price) >= buy_price))
         if not self.bid.validates():
             return render.bid(item, bids, self.bid)
         else:
