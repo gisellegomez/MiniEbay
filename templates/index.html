@@ -1,0 +1,65 @@
+$def with (form, items, username)
+
+<div data-role="header">
+    <h1>Mini Ebay</h1>
+
+    <div data-role="navbar">
+        <ul>
+        <li><a href="/index">Home</a></li>
+        <li><a href="/new">New Listing</a></li>
+        <li><a href="/setDate">Set Date and Time</a></li>
+        <li><a href="/">Logout</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div data-role="main" class="ui-content">
+
+    <div align="right">
+        <b>Logged in as $username</b>
+    </div>
+
+    <h3>Current Items</h3>
+
+    <table data-role="table" class="ui-responsive ui-shadow" id="myTable">
+        <thead>
+        <tr>
+            <th>ID number</th>
+            <th>Category</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>"Buy Now" Price</th>
+            <th>Status</th>
+            <th>End Date</th>
+            <th>Detailed View & Bids</th>
+        </tr>    
+        </thead>
+        <tbody>
+        $for item in items:
+          <tr>
+            <td>$item.id</td>
+            <td>$item.category</td>
+            <td>$item.title</td>
+            <td>$item.description</td>
+            <td>$item.price</td>
+            $if item.open == 1:
+              <td>Open</td>
+            $else:
+              <td>Closed</td>
+            <td>$item.end_date</td>
+            <td><a href="/bid/$item.id">View</a></td>
+          </tr>    
+        </tbody>
+    </table>  
+
+    <h3>Filter Items</h3>
+
+    <form action="" method="post">
+        <div class="ui-field-contain" width="100%">
+            $:form.render()
+        </div>
+        <input type="submit" data-inline="true" value="Submit">
+    </form>
+</div>
+

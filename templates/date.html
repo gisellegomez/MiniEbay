@@ -1,0 +1,30 @@
+$def with (form, currTime, username)
+
+<div data-role="header">
+    <h1>Mini Ebay</h1>
+
+    <div data-role="navbar">
+        <ul>
+        <li><a href="/index">Home</a></li>
+        <li><a href="/new">New Listing</a></li>
+        <li><a href="/setDate">Set Date and Time</a></li>
+        <li><a href="/">Logout</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div data-role="main" class="ui-content">
+
+    <div align="right">
+        <b>Logged in as $username</b>
+    </div>
+
+    <h3>Set the current date and time (currently $currTime)</h3>
+
+    <form name="setDate" action='/setDate'  method="post">
+        $:form.render()
+        <input type="submit" data-inline="true" value="Submit">
+    </form>
+
+</div>

@@ -1,11 +1,12 @@
-CST351 Mini eBay project
-Team members: Giselle Gomez, Audrey Ramborg, Kelly Keniston
-Framework: webpy with sqlite
+CS 351 Final Project - Mini Ebay
+Kelly Keniston, Giselle Gomez, Audrey Ramberg
+An implementation of a miniature ebay-like system using the framework webpy
+and sqlite for the database.
 
-commands to run:
-
+Commands to load data into database:
 sqlite3 sqlite.db
-.read ebay/schema.sql
+.read tables.sql
+.quit
 
-cd ebay
-python ebay.py
+Commands to run program:
+python run.py

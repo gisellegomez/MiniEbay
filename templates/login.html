@@ -1,0 +1,25 @@
+$def with (form)
+
+<div data-role="header">
+    <h1>Mini Ebay</h1>
+
+    <div data-role="navbar">
+        <ul>
+        <li><a href="/">Login</a></li>
+        <li><a href="/signup">Sign Up</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div data-role="main" class="ui-content">
+
+    <h3>Log In</h3>
+
+    <center>
+    <form name="login" action="" method="post">
+        $:form.render()
+        <input type="submit" data-inline="true" value="Submit">
+    </form>
+    </center>
+</div>

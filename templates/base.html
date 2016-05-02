@@ -8,15 +8,6 @@ $def with (page)
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
     <style> 
-    /*.buynow{
-        margin-left: -500px;
-    }
-    .buynow input:first-child{
-        margin-left: 500px;
-    }
-    .button{
-        margin-left: 500px;
-    }*/
     #bidForms{
         width: 400px;
     }
@@ -49,22 +40,7 @@ $def with (page)
 
 <div data-role="page">
 
-    <div data-role="header">
-        <h1>Mini Ebay</h1>
-
-        <div data-role="navbar">
-            <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/new">New Listing</a></li>
-            <li><a href="/setDate">Set Date and Time</a></li>
-            </ul>
-        </div>
-
-    </div>
-
-    <div data-role="main" class="ui-content">
-        $:page
-    </div>
+    $:page
 
     <div data-role="footer" data-position="fixed"> 
 	    <h4>Kelly Keniston, Giselle Gomez, Audrey Ramberg - CS 351 Spring 2016</h4> 
