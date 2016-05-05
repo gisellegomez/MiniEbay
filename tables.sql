@@ -1,6 +1,6 @@
 CREATE TABLE Time(
-    current_time datetime DEFAULT CURRENT_TIMESTAMP,
-    forever_time datetime DEFAULT CURRENT_TIMESTAMP
+    current_time DEFAULT (datetime('now', 'localtime')),
+    forever_time DEFAULT (datetime('now', 'localtime'))
 );
 
 CREATE TABLE Users(
@@ -109,4 +109,4 @@ AFTER UPDATE OF winner ON Items
         SELECT * FROM Items;
     END;
 
-UPDATE Time SET current_time=CURRENT_TIMESTAMP;
+UPDATE Time SET current_time=(datetime('now', 'localtime'));
