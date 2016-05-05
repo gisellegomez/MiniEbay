@@ -110,6 +110,24 @@ class Date:
         global currentUser
         return render.date(self.form, str(get_current_time()), currentUser)
 
+    def RESET(self):
+        global currentUser
+        current_time = get_forever_time()
+        self.form.Year.value=current_time.year
+        self.form.Month.value=current_time.month
+        self.form.Day.value=current_time.day
+        self.form.Hour.value=current_time.hour
+        self.form.Minute.value=current_time.minute
+        self.form.Second.value=current_time.second
+        parsed_time = datetime.datetime(
+             int(self.form.Year.value), int(self.form.Month.value), 
+                     int(self.form.Day.value),
+             int(self.form.Hour.value), int(self.form.Minute.value), 
+                     int(self.form.Second.value)
+        )
+        db.update('Time', where="1=1", current_time=parsed_time)
+        return render.date(self.form, str(get_current_time()), currentUser)
+
     def POST(self):
         global currentUser
         if not self.form.validates():
@@ -182,10 +200,11 @@ class Bid:
         return render.bid(item, bids, self.bid, currentUser)
 
     def BYNOW(self):
+        global currentUser
         item_id = web.cookies().get('item_id')
         item = get_item(int(item_id))
         buy_price = item.price
-        db.insert('Bids', items_id=int(item_id), item_buyer=self.bid['User'].value, 
+        db.insert('Bids', items_id=int(item_id), item_buyer=currentUser, 
                     new_price=buy_price, 
                     b_time=get_current_time().strftime(time_format))  
         raise web.seeother('/bid/' + item_id)
@@ -248,6 +267,10 @@ class New:
 def get_current_time():
     time_string = db.select('Time')[0].current_time
     return datetime.datetime.strptime(time_string, time_format)
+
+def get_forever_time():
+    time_string = db.select('Time')[0].forever_time
+    return datetime.datetime.strptime(time_string, time_format)    
 
 def get_items():
     return db.select('Items', order='id DESC')

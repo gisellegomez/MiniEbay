@@ -7,7 +7,7 @@ $def with (form, currTime, username)
         <ul>
         <li><a href="/index">Home</a></li>
         <li><a href="/new">New Listing</a></li>
-        <li><a href="/setDate">Set Date and Time</a></li>
+        <li><a href="/date">Set Date and Time</a></li>
         <li><a href="/">Logout</a></li>
         </ul>
     </div>
@@ -22,9 +22,12 @@ $def with (form, currTime, username)
 
     <h3>Set the current date and time (currently $currTime)</h3>
 
-    <form name="setDate" action='/setDate'  method="post">
+    <form name="Date" action='/date'  method="post">
         $:form.render()
         <input type="submit" data-inline="true" value="Submit">
+    </form>
+    <form name="Date" action='/date'  method="reset">
+    	<input type="submit" data-inline="true" value="Reset">
     </form>
 
 </div>

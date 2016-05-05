@@ -7,7 +7,7 @@ $def with (item, bids, form, username)
         <ul>
         <li><a href="/index">Home</a></li>
         <li><a href="/new">New Listing</a></li>
-        <li><a href="/setDate">Set Date and Time</a></li>
+        <li><a href="/date">Set Date and Time</a></li>
         <li><a href="/">Logout</a></li>
         </ul>
     </div>
@@ -49,6 +49,11 @@ $def with (item, bids, form, username)
         </tbody>
     </table>  
     <br>
+
+    $if item.open == 1:
+     <form id="bidForms" name="bid" action='/bid'  method="bynow">
+            <input type="submit" data-inline="true" value="Buy Now">
+    </form>
 
     <h3>Bids</h3>
 

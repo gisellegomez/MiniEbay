@@ -1,5 +1,6 @@
 CREATE TABLE Time(
-    current_time datetime DEFAULT CURRENT_TIMESTAMP
+    current_time datetime DEFAULT CURRENT_TIMESTAMP,
+    forever_time datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Users(
@@ -85,6 +86,7 @@ CREATE TRIGGER UpdateItemStatus
 AFTER UPDATE OF current_time ON Time
 	BEGIN
 		UPDATE Items SET open = 0 WHERE end_date <= new.current_time;
+        UPDATE Items SET open = 1 WHERE new.current_time < end_date AND Items.winner = NULL;
 		UPDATE Items SET winner = (SELECT item_buyer from Bids 
             WHERE Bids.items_id = Items.id ORDER BY Bids.new_price DESC LIMIT 1) 
             WHERE open = 0 AND winner IS NULL;
